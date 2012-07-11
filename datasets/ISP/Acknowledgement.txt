@@ -1,0 +1,7 @@
+Acknowledgement: 
+
+These ISP datasets originally appeared in the reference bellow, and were made available to myself by Pedro dos Santos Teixeira. 
+
+dos Santos Teixeira, P. H., & Milidiú, R. L. (2010). Data stream anomaly detection through principal subspace tracking. Proceedings of the 2010 ACM Symposium on Applied Computing, (September), 1609–1616. New York, New York, USA: ACM. doi:10.1145/1774088.1774434
+
+

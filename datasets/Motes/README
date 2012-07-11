@@ -1,0 +1,11 @@
+Motes datasets
+format: every row corresponds to a timestamp, every column a sensor measurement
+
+q8calibHumid.dat - humidity measurements
+q8calibHumTemp.dat - temperature measurements
+q8calibLight.dat - light measurements
+q8calibVolt.dat - voltage measurements
+
+Acknowlegement:
+These datasets are produced by Jimeng Sun and Christos Faloutsos (CMU)
+The original data are provided by Carlos Guestrin (CMU) 
