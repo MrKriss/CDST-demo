@@ -436,3 +436,21 @@ def zscore_win(data, win_length):
         zscore_data[i,:] =  (data[i,:] - est_mean_vec) / est_std_vec 
         
     return zscore_data
+
+def RSRE(data, recon, ignored = 0):
+    """Calaculate relative squared reconstruction error"""
+    
+    X_norm_sq = np.zeros(data.shape[0])    
+    data_norm_sq = np.zeros(data.shape[0])
+    
+    for i in range(data.shape[0]):
+        X_norm_sq[i] = np.linalg.norm(data[i,:] - recon[i,:]) ** 2
+        data_norm_sq[i] = np.linalg.norm(data[i,:]) ** 2
+    
+        
+    sum_x_norm_sq = X_norm_sq[ignored:].sum()
+    sum_data_norm_sq = data_norm_sq[ignored:].sum()
+    
+    RSRE = sum_x_norm_sq / sum_data_norm_sq
+    
+    return RSRE 

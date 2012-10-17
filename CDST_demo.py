@@ -655,20 +655,19 @@ class CDST(object):
     
 
 
-    
 if __name__=='__main__':
   
   ''' Experimental Run Parameters '''
   p = {'alpha': 0.98,        # The exponential decay factor
-        'init_r' : 2,        # the initial number of hidden variables 
+        'init_r' : 6,        # the initial number of hidden variables 
         'fix_init_Q' : 0,    # whether to fix initial Q as Identity or make random
         'small_value' : 0.0001,    # Used to avoid non-signularities 
-        'ignoreUp2' : 10,          # Starting time steps ignored for anomalies
+        'ignoreUp2' : 50,          # Starting time steps ignored for anomalies
         # Statistical Anomaly Detection
         'SRE_sample_N' : 20,       # Size of SRE sample 
         'dependency_lag' : 5,      # lag between current and sampled SRE
         't_thresh' : None,         # Threshold value for test statistic 
-        'FP_rate' : 10**-6,        # Significance level of statistical test 
+        'FP_rate' : 10**-5,        # Significance level of statistical test 
         # SAX Parameters
         'word_size' : 10,          # No. of symbols in each word
         'zt_sample_size' : 10,     # No. of data points in sample
@@ -689,10 +688,10 @@ if __name__=='__main__':
         'L2' : 200,  # Length of anomaly (hold)
         'M' : 5,     # Magnitude of anomaly 
         'pA' : 0.1,  # Percentage of streams that are anomalous
-        'noise_sig' : 0.3,  # noise added 
-        'seed' : 1}         # Random seed 
+        'noise_sig' : 0.0,  # noise added 
+        'seed' : 234}         # Random seed 
   
-  anomaly_type = 'peak_dip'  # choice of peak_dip, grad_persist and step
+  anomaly_type = 'grad_persist'  # choice of peak_dip, grad_persist and step
   gen_funcs = dict(peak_dip = gen_a_peak_dip,
                    grad_persist = gen_a_grad_persist,
                    step = gen_a_step)
@@ -705,26 +704,26 @@ if __name__=='__main__':
   #data_name = 'synth'
   #D = gen_funcs[anomaly_type](**a)  
   #raw_data = D['data']
-  #data = raw_data
+  #data = raw_data.copy()
   
   '''ISP data sets '''
 
-  data_name = 'isp_routers'
-  raw_data = load_ts_data(data_name, 'full')
-  data = raw_data.copy()
+  #data_name = 'isp_routers'
+  #raw_data = load_ts_data(data_name, 'full')
+  #data = raw_data.copy()
   
   ''' Sensor Motes data sets '''
-  #data_name = 'motes_l'
-  #raw_data = load_data(data_name)
-  #data = clean_zeros(raw_data, cpy=1)  
+  data_name = 'motes_l'
+  raw_data = load_data(data_name)
+  data = clean_zeros(raw_data, cpy=1)  
   
   
   ''' Data Preprocessing '''
   """ Data is loaded into memory, mean centered and standardised
   then converted to an iterable to read by the CD-ST each iteration"""
   
-  #data = zscore_win(data, 300) # Sliding window implimentation
-  data = zscore(data) # Batch method implimentation 
+  data = zscore_win(data, 100) # Sliding window implimentation
+  #data = zscore(data) # Batch method implimentation 
   
   data = np.nan_to_num(data) 
   z_iter = iter(data) 
@@ -746,10 +745,10 @@ if __name__=='__main__':
   
     '''Store data''' 
     # Calculate reconstructed data if needed for plotting visulisations
-    #st = CDST_alg.st
-    #CDST_alg.st['recon'] = np.dot(st['Q'][:,:st['r']],st['ht'][:st['r']]) 
+    st = CDST_alg.st
+    CDST_alg.st['recon'] = np.dot(st['Q'][:,:st['r']],st['ht'][:st['r']]) 
     
-    tracked_values = ['ht','e_ratio','r', 't_stat', 'SRE_dif_t', 'Ez', 'Eh']
+    tracked_values = ['ht','e_ratio','r', 't_stat', 'SRE_dif_t', 'Ez', 'Eh', 'recon']
     #tracked_values = ['ht','e_ratio','r', 't_stat', 'SRE_dif_t', 'Ez', 'Eh', 'recon']
   
     CDST_alg.track_var(tracked_values, print_anom = 1)
@@ -760,4 +759,5 @@ if __name__=='__main__':
   #CDST_alg.plot_res([data, 'recon', 't_stat'])
   
   CDST_alg.plot_res([data, 'ht', 't_stat'], ynames =['Standardised Data', 'Hidden Variables', 'Test Statistic'])
+  CDST_alg.plot_res([data, 'SRE_dif_t', 't_stat'], ynames =['Standardised Data', 'SRE', 'Test Statistic'])
   CDST_alg.plot_res([raw_data, data, 't_stat'], ynames =['Raw Data', 'Standardised Data', 'Test Statistic'])
