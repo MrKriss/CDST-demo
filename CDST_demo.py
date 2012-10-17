@@ -659,7 +659,7 @@ if __name__=='__main__':
   
   ''' Experimental Run Parameters '''
   p = {'alpha': 0.98,        # The exponential decay factor
-        'init_r' : 6,        # the initial number of hidden variables 
+        'init_r' : 2,        # the initial number of hidden variables 
         'fix_init_Q' : 0,    # whether to fix initial Q as Identity or make random
         'small_value' : 0.0001,    # Used to avoid non-signularities 
         'ignoreUp2' : 50,          # Starting time steps ignored for anomalies
@@ -708,22 +708,22 @@ if __name__=='__main__':
   
   '''ISP data sets '''
 
-  #data_name = 'isp_routers'
-  #raw_data = load_ts_data(data_name, 'full')
-  #data = raw_data.copy()
+  data_name = 'isp_routers'
+  raw_data = load_ts_data(data_name, 'full')
+  data = raw_data.copy()
   
   ''' Sensor Motes data sets '''
-  data_name = 'motes_l'
-  raw_data = load_data(data_name)
-  data = clean_zeros(raw_data, cpy=1)  
+  #data_name = 'motes_l'
+  #raw_data = load_data(data_name)
+  #data = clean_zeros(raw_data, cpy=1)  
   
   
   ''' Data Preprocessing '''
   """ Data is loaded into memory, mean centered and standardised
   then converted to an iterable to read by the CD-ST each iteration"""
   
-  data = zscore_win(data, 100) # Sliding window implimentation
-  #data = zscore(data) # Batch method implimentation 
+  #data = zscore_win(data, 100) # Sliding window implimentation
+  data = zscore(data) # Batch method implimentation 
   
   data = np.nan_to_num(data) 
   z_iter = iter(data) 
